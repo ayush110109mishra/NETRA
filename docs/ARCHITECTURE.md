@@ -58,9 +58,20 @@
 
 ```
 NETRA/
+├── ai-core/                    # Python Intelligence Core (FastAPI, Pydantic v2, Phases 1-6) [ATUL]
+│   ├── anomaly/                # Phase 4 Anomaly & Risk attribution engine
+│   ├── api/                    # FastAPI routes (/health, /intelligence, /anomalies, /fusion, /predictions)
+│   ├── entities/               # Phase 3 Entity Intelligence & Focus Mode
+│   ├── events/                 # Phase 2 Multi-event correlation & clustering
+│   ├── fusion/                 # Phase 5 Multi-source sensor fusion & evidence ledger
+│   ├── intelligence/           # Master domain orchestrators
+│   ├── models/                 # Pydantic v2 domain schemas
+│   ├── prediction/             # Phase 6 Predictive Intelligence & forecasting
+│   ├── simulation/             # Operational synthetic scenarios
+│   └── tests/                  # 248 unit & integration tests (100% passing)
 ├── apps/
-│   ├── web/                    # React 18, Vite, Tailwind CSS, TanStack Query
-│   └── api/                    # Express.js, TypeScript, Correlation ID, Zod Env
+│   ├── web/                    # React 18, Vite, Tailwind CSS, TanStack Query [AYUSH]
+│   └── api/                    # Express.js, TypeScript, Correlation ID, Zod Env [AYUSH]
 ├── packages/
 │   └── shared/                 # Common interfaces, API response envelopes, constants
 ├── prisma/
@@ -70,6 +81,7 @@ NETRA/
 ├── .env.example                # Environment variable template
 └── package.json                # Monorepo workspaces root
 ```
+
 
 ---
 

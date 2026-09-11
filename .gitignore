@@ -44,3 +44,16 @@ Thumbs.db
 # Temporary / test artifacts
 coverage/
 .nyc_output/
+
+# Python / pytest / AI-Core artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+env/
+venv/
+ENV/
+

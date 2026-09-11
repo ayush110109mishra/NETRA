@@ -29,9 +29,20 @@ NETRA is engineered as a high-density, mission-critical command-and-control plat
 
 ```
 NETRA/
+├── ai-core/                    # Python Intelligence Core (FastAPI, AI/ML, Phases 1-6) [ATUL]
+│   ├── anomaly/                # Phase 4: Multi-dimensional anomaly detection & attribution
+│   ├── api/                    # FastAPI endpoints (/health, /intelligence, /anomalies, /fusion, /predictions)
+│   ├── entities/               # Phase 3: Entity profiles, behavioral baselines & focus mode
+│   ├── events/                 # Phase 2: Multi-event correlation, clustering & deduplication
+│   ├── fusion/                 # Phase 5: Multi-source sensor fusion, conflict arbitration & evidence
+│   ├── intelligence/           # Master domain orchestrators (Phases 1-6)
+│   ├── models/                 # Deterministic Pydantic v2 data contracts
+│   ├── prediction/             # Phase 6: Predictive intelligence, trend regression & forecasting
+│   ├── simulation/             # 40+ operational synthetic scenarios
+│   └── tests/                  # 248 automated unit & integration tests (100% pass rate)
 ├── apps/
-│   ├── web/                    # React 18, Vite, TypeScript, Tailwind CSS, TanStack Query
-│   └── api/                    # Express.js, TypeScript, Zod, Structured Logger, Correlation ID
+│   ├── web/                    # React 18, Vite, TypeScript, Tailwind CSS, TanStack Query [AYUSH]
+│   └── api/                    # Express.js, TypeScript, Zod, Structured Logger, Correlation ID [AYUSH]
 ├── packages/
 │   └── shared/                 # Common TypeScript contracts, API envelopes, constants
 ├── prisma/
@@ -45,48 +56,57 @@ NETRA/
 
 ## Technology Stack
 
-| Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, TanStack Query, React Router, Lucide React, Recharts, Framer Motion |
-| **Backend** | Node.js, Express.js, TypeScript, Zod, UUID, CORS |
-| **Database** | PostgreSQL, Prisma ORM |
-| **Architecture** | Monorepo with npm workspaces, Controller-Service-Repository pattern |
+| Layer | Technologies | Primary Owner |
+| :--- | :--- | :--- |
+| **Intelligence Core** | Python 3.12, FastAPI, Pydantic v2, Pytest, NumPy | **ATUL** (AI/ML & Intelligence) |
+| **Command Web UI** | React 18, TypeScript, Vite, Tailwind CSS, TanStack Query, Lucide React, Recharts, Framer Motion | **AYUSH** (Full Stack) |
+| **Command API Gateway** | Node.js, Express.js, TypeScript, Zod, UUID, CORS | **AYUSH** (Full Stack) |
+| **Database & ORM** | PostgreSQL, Prisma ORM | Joint |
+| **Architecture** | Hybrid Monorepo (Node.js workspaces + Python AI Core) | Joint |
 
 ---
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. NETRA Intelligence Core (Python / AI / ML)
+```bash
+cd ai-core
+pip install -r requirements.txt
+python main.py
+```
+- **Intelligence API Root**: [http://localhost:8000](http://localhost:8000)
+- **Interactive OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Verification Suite (248 Tests)**:
+  ```bash
+  pytest tests/
+  ```
+
+### 2. NETRA Operational Dashboard & Gateway (Node / TypeScript)
 ```bash
 npm install
-```
-
-### 2. Environment Setup
-```bash
-# Copy template to .env
 cp .env.example .env
-```
-
-### 3. Start Development Servers
-```bash
 npm run dev
 ```
 
 - **Frontend Command Display**: [http://localhost:5173](http://localhost:5173)
 - **Backend API Root**: [http://localhost:5000/api/v1](http://localhost:5000/api/v1)
-- **Machine-Readable Health Endpoint**: [http://localhost:5000/api/v1/health](http://localhost:5000/api/v1/health)
+- **Health Endpoint**: [http://localhost:5000/api/v1/health](http://localhost:5000/api/v1/health)
 
 ---
 
 ## Quality & Verification
 
 ```bash
-# Run strict TypeScript type checks across all workspaces
+# Verify Python Intelligence Core (248/248 tests passed, 50/50 bit-for-bit determinism)
+cd ai-core && pytest tests/ -q && cd ..
+
+# Run strict TypeScript type checks across all Node workspaces
 npm run typecheck
 
-# Run production build across all workspaces
+# Run production build across all Node workspaces
 npm run build
 ```
+
 
 ---
 
