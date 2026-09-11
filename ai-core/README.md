@@ -1,9 +1,9 @@
-# NETRA Intelligence Core — Phase 6: Predictive Intelligence & Forecasting
+# NETRA Intelligence Core — Phase 7: Ask NETRA
 
 **ASTRAVEDA | Defence Intelligence Platform**  
-**Engineering Domain**: AI / ML / Intelligence Core (ATUL)  
+**Engineering Domain**: AI / ML / Python Intelligence Core (ATUL)  
 **Status**: `VERIFIED & OPERATIONAL`  
-**Test Suite**: `248 Passed, 0 Failed` (100% Pass Rate across Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, & Phase 6)  
+**Test Suite**: `309 Passed, 0 Failed` (100% Pass Rate across Phases 1 through 7)  
 **Data Classification**: `SYNTHETIC / DEMO` (Zero real-world operational or classified data)
 
 ---
@@ -14,14 +14,15 @@ NETRA is an AI-powered defence intelligence platform designed to transform heter
 
 NETRA's core product philosophy is:
 > **NETRA is not a map application.**  
-> **The map provides geographic context (WHERE); NETRA's Intelligence Core is the actual product (WHAT, WHO, HOW IMPORTANT, WHY, and WHAT NEXT).**
+> **The map provides geographic context (WHERE); NETRA's Intelligence Core is the actual product (WHAT, WHO, HOW IMPORTANT, WHY, WHAT NEXT, and HOW TO QUERY).**
 
 * **Phase 1 (MVP)**: Single-event intelligence, severity assessment, confidence bounds, and risk modeling.
 * **Phase 2 (Event Intelligence)**: Multi-event correlation, spatio-temporal clustering, deduplication, pattern recognition, and baseline drift.
 * **Phase 3 (Entity Intelligence)**: Comprehensive Entity-Centric Intelligence, Focus Mode (`GET /api/v1/intelligence/entities/{entity_id}`), behavioral profiling, and four-tier epistemic assessments.
 * **Phase 4 (Advanced Anomaly & Risk Intelligence)**: Multi-dimensional anomaly detection across 8 analytical dimensions, mathematical factor attribution, persistence lifecycle tracking, explainable `phase4-v1` risk modeling with hysteresis buffering, decoupled confidence calibration, sector heat indexing, and geospatial hotspot clustering.
 * **Phase 5 (Multi-Source Intelligence Fusion)**: Heterogeneous sensor ingestion, source registry & health monitoring, normalization with audit traces, temporal & spatial alignment, deterministic entity resolution, cross-source corroboration without double counting, contradiction detection & claim preservation, immutable evidence ledgering, weighted consensus fusion, and seamless Phase 4 integration.
-* **Phase 6 (Predictive Intelligence & Forecasting)**: Probabilistic and uncertainty-aware future state projection (`ACTIVITY_STATE`, `ANOMALY_STATE`, `RISK_TREND`, `SPATIAL_STATE`, `EVENT_TYPE_RECURRENCE`, `BEHAVIORAL_STATE`) over configurable horizons (`SHORT`: 15–30m, `MEDIUM`: 1–6h, `LONG`: 12–24h), cold-start gating (< 3 events $\to$ `UNKNOWN`, $\le 0.30$ confidence), regime shift detection ($\Delta\text{slope} \ge 0.20$), multi-strategy ensemble forecasting (`Persistence`, `Trend`, `Recurrence`), 7-factor linear probability calibration, quantified residual uncertainty intervals, and a 5-tier epistemic ledger (`OBSERVED`, `FUSED`, `INFERRED`, `PREDICTED`, `UNCERTAIN`).
+* **Phase 6 (Predictive Intelligence & Forecasting)**: Probabilistic and uncertainty-aware future state projection (`ACTIVITY_STATE`, `ANOMALY_STATE`, `RISK_TREND`, `SPATIAL_STATE`, `EVENT_TYPE_RECURRENCE`, `BEHAVIORAL_STATE`) over configurable horizons (`SHORT`: 15–30m, `MEDIUM`: 1–6h, `LONG`: 12–24h), cold-start gating (< 3 events $\to$ `UNKNOWN`, $\le 0.30$ confidence), regime shift detection ($\Delta\text{slope} \ge 0.20$), multi-strategy ensemble forecasting (`Persistence`, `Trend`, `Recurrence`), 7-factor linear probability calibration, and quantified residual uncertainty intervals.
+* **Phase 7 (Ask NETRA — Natural Language Intelligence & Query Reasoning Engine)**: Structured, explainable, evidence-grounded natural-language query reasoning engine over the Phase 1–6 core. Translates operator questions into structured execution plans, runs deterministic engine steps, organizes evidence into a 5-tier Epistemic Ledger (`OBSERVED`, `FUSED`, `INFERRED`, `PREDICTED`, `UNCERTAIN`), grounds 100% of claims with concrete evidence IDs, supports follow-up conversational context (pronouns/entities), and guarantees zero hallucination.
 
 ---
 
@@ -44,14 +45,15 @@ ai-core/
 │   ├── spatial.py                   # Boundary breaches, centroid distance & teleportation detector
 │   └── trend.py                     # Rate of change & trajectory analyzer
 ├── api/
-│   ├── dependencies.py              # FastAPI providers (EntityRepository, AnomalyEngine, FusionEngine, PredictionEngine)
+│   ├── dependencies.py              # FastAPI providers (EntityRepository, Engines, AskNetraEngine)
 │   └── routes/
 │       ├── health.py                # GET /health, GET /api/v1/health
 │       ├── intelligence.py          # Phase 1, Phase 2, and Phase 3 API routes
 │       ├── anomaly.py               # Phase 4 Anomaly & Risk API routes
 │       ├── fusion.py                # Phase 5 Multi-Source Fusion API routes
-│       └── prediction.py            # Phase 6 Predictive Intelligence API routes
-├── config.py                        # Centralized thresholds, weights, and horizons (v6.0.0)
+│       ├── prediction.py            # Phase 6 Predictive Intelligence API routes
+│       └── ask.py                   # Phase 7 Ask NETRA Natural Language API routes
+├── config.py                        # Centralized thresholds, weights, and AskNetraConfig (v7.0.0)
 ├── entities/                        # Phase 3 Entity Intelligence Components
 │   ├── baseline.py                  # Behavioral baseline engine with cold-start gating (< 3 events)
 │   ├── change_detection.py          # Behavioral change detector
@@ -77,6 +79,7 @@ ai-core/
 │   └── temporal_alignment.py        # Timestamp proximity, clock skew & stale telemetry detection
 ├── intelligence/
 │   ├── anomaly_intelligence.py      # Master Phase 4 Anomaly & Risk Intelligence Orchestrator
+│   ├── ask_netra.py                 # Master Phase 7 Ask NETRA Engine & Session Orchestrator
 │   ├── entity_intelligence.py       # Master Phase 3 Entity Intelligence Orchestrator
 │   ├── event_intelligence.py        # Master Phase 2 Multi-Event Intelligence Orchestrator
 │   ├── fusion_intelligence.py       # Master Phase 5 Fusion Intelligence & Phase 4 Bridge Orchestrator
@@ -84,6 +87,7 @@ ai-core/
 │   └── engine.py                    # Master Phase 1 Single-Event Pipeline Orchestrator
 ├── models/
 │   ├── anomaly_intelligence.py      # Phase 4 Anomaly Schemas
+│   ├── ask_netra.py                 # Phase 7 Ask NETRA Query, Plan, Evidence & Answer Schemas
 │   ├── common.py                    # Coordinates, EntityStatus, Allegiance, EventSource
 │   ├── entity_intelligence.py       # Phase 3 Entity Schemas
 │   ├── error.py                     # Standardized APIError & APIErrorResponse envelope
@@ -103,121 +107,126 @@ ai-core/
 │   ├── temporal_state.py            # Irregular time-series sequence builder & sampling regularity
 │   ├── trend.py                     # Least-squares linear regression & regime change detector
 │   └── uncertainty.py               # Residual uncertainty & heuristic confidence intervals
+├── query/                           # Phase 7 Query Interpretation & Planning Subpackage
+│   ├── engine.py                    # Master QueryInterpretationEngine coordinator
+│   ├── entity_extractor.py          # Entity canonical ID, alias, sector, sensor & pronoun extractor
+│   ├── executor.py                  # Multi-step query executor invoking P1–P6 engines
+│   ├── filters.py                   # Severity, cutoff, event type & limit extractor
+│   ├── intent.py                    # 16-intent deterministic regex & keyword classifier
+│   ├── planner.py                   # DAG query plan builder generating inspectable steps
+│   ├── time_parser.py               # Relative & absolute duration evaluator relative to as_of
+│   └── validator.py                 # Entity recognition, ambiguity & kinetic safety validator
+├── reasoning/                       # Phase 7 Evidence Grounding & Synthesis Subpackage
+│   ├── engine.py                    # Master ReasoningEngine coordinator
+│   ├── evidence.py                  # 5-tier Epistemic Ledger builder & citation indexer
+│   ├── explanation.py               # Attribution ("Why?"), drift ("What changed?"), and comparisons
+│   └── synthesis.py                 # Structured AskAnswer synthesizer with 100% grounded claims
 ├── simulation/
 │   ├── synthetic_data.py            # Unified scenario catalogs and EntityRepository seeding
 │   ├── fusion_scenarios.py          # 14 Phase 5 multi-source operational scenarios
-│   └── prediction_scenarios.py      # 16 Phase 6 predictive operational scenarios
-└── tests/                           # 68 test modules (248 automated tests, 100% passing)
+│   ├── prediction_scenarios.py      # 16 Phase 6 predictive operational scenarios
+│   └── ask_scenarios.py             # 20 Phase 7 Ask NETRA operational query scenarios
+└── tests/                           # 79 test modules (309 automated tests, 100% passing)
 ```
 
 ---
 
-## 3. Phase 6 Predictive Intelligence Pipeline
+## 3. Ask NETRA Pipeline Architecture
 
 ```text
-HISTORICAL TELEMETRY (CanonicalEvents, EntityProfiles, FusedObservations, Phase 4 Anomalies)
-         ↓
-  TEMPORAL FILTERING (as_of evaluation timestamp; strictly eliminates future leakage)
-         ↓
-  TEMPORAL STATE SEQUENCE (Irregular interval representation, sampling regularity index)
-         ↓
-  TREND & REGIME DETECTION (Least-squares regression slope, direction, strength, persistence, regime shifts)
-         ↓
-  MULTI-DOMAIN FEATURE EXTRACTION (Temporal, Kinematic, Spatial, Behavioral, Anomaly, Risk, Fusion)
-         ↓
-  COLD-START & SUFFICIENCY GATING (< 3 events -> UNKNOWN, <= 0.30 conf; 3-5 events -> LIMITED, <= 0.55 conf)
-         ↓
-  MULTI-STRATEGY ENSEMBLE FORECAST (Persistence, Trend Extrapolation, Recurrence)
-         ↓
-  ENSEMBLE MODEL AGREEMENT (Unanimous=1.0, Majority=0.70, Divergent=0.35)
-         ↓
-  7-FACTOR PROBABILITY ESTIMATION (Bounded [0.0, 1.0], strictly normalized weights)
-         ↓
-  UNCERTAINTY & INTERVAL ESTIMATION (Depth, Volatility, Regime Shift, Sensor Conflict penalties)
-         ↓
-  FIVE-TIER EPISTEMIC ASSESSMENT (OBSERVED, FUSED, INFERRED, PREDICTED, UNCERTAIN)
-         ↓
-  EXPLAINABLE DOSSIER (Narrative, Supporting Factors, Limiting Factors, Invalidation Conditions)
-         ↓
-  REST JSON API (Deterministic responses across 7 endpoints)
+OPERATOR NATURAL LANGUAGE QUERY
+               ↓
+query/intent.py (16 Intent Types: STATUS, PROFILE, RISK, ANOMALY, WHY, FORECAST, etc.)
+               ↓
+query/entity_extractor.py (Extracts ENTITY-XX, SECTOR-XX, RADAR-XX, and pronoun references)
+               ↓
+query/time_parser.py (Relative windows: "last 30 minutes", "past 6 hours", "last 24 hours")
+               ↓
+query/validator.py (Rejects ENTITY_NOT_FOUND, AMBIGUOUS_QUERY, UNSUPPORTED_QUERY)
+               ↓
+query/planner.py (Constructs inspectable multi-step DAG execution plan)
+               ↓
+query/executor.py (Executes steps against Phase 1–6 intelligence engines)
+               ↓
+reasoning/evidence.py (Extracts and tags evidence into 5 Epistemic Tiers)
+               ↓
+reasoning/explanation.py (Root cause attribution, longitudinal drift, comparative delta)
+               ↓
+reasoning/synthesis.py (Synthesizes headline, summary, key findings, and 100% grounded claims)
+               ↓
+intelligence/ask_netra.py (Coordinates session context, conversational memory, and caching)
+               ↓
+REST API: POST /api/v1/intelligence/ask (Deterministic output with strict audit provenance)
 ```
 
 ---
 
-## 4. Mathematical Formulations
+## 4. 16 Supported Query Intents
 
-### 4.1 Least-Squares Linear Trend
-$$\text{slope} = \frac{\sum_{i=0}^{n-1} (i - \bar{x})(y_i - \bar{y})}{\sum_{i=0}^{n-1} (i - \bar{x})^2}, \quad \text{strength} = |r| = \frac{\sum (i - \bar{x})(y_i - \bar{y})}{n \cdot \sigma_x \cdot \sigma_y}$$
-
-### 4.2 Operational Regime Shift
-$$\text{acceleration} = \text{slope}_{\text{second\_half}} - \text{slope}_{\text{first\_half}}$$
-$$\text{is\_regime\_change} = \text{True} \iff |\text{acceleration}| \ge 0.20$$
-
-### 4.3 7-Factor Linear Forecast Probability
-$$\text{Probability} = w_1 \text{Recurrence} + w_2 \text{TrendStrength} + w_3 \text{Persistence} + w_4 \text{EvidenceQuality} + w_5 \text{FusionConf} + w_6 \text{DataCompleteness} + w_7 \text{ModelAgreement}$$
-* Weights: `recurrence=0.25`, `trend_strength=0.20`, `persistence=0.15`, `evidence_quality=0.15`, `fusion_confidence=0.10`, `data_completeness=0.10`, `model_agreement=0.05` (Sum = 1.00).
-
-### 4.4 Residual Uncertainty & Interval Bounds
-$$\text{Uncertainty} = \text{base} + \text{pen}_{\text{history}} + \text{pen}_{\text{volatility}} + \text{pen}_{\text{conflict}} + \text{pen}_{\text{regime}} + \text{pen}_{\text{disagreement}}$$
-$$\text{Interval}_{\text{half}} = \max(0.04, \text{Uncertainty} \times 0.25)$$
-$$[\text{lower}, \text{upper}] = [\max(0.0, P - \text{Interval}_{\text{half}}), \min(1.0, P + \text{Interval}_{\text{half}})]$$
+1. `STATUS`: Situational awareness and active entity track table overview.
+2. `ENTITY_PROFILE`: Target classification, lifecycle state, observation span, and baseline.
+3. `TIMELINE`: Chronological history of events and detections for a track or sector.
+4. `WHAT_CHANGED`: Longitudinal behavioral baseline drift and operational state shift detection.
+5. `ANOMALY`: 8-dimensional multivariate anomaly detection and factor attribution.
+6. `RISK`: Explainable 7-factor composite risk assessment and operational posture rating.
+7. `WHY`: Causal attribution and root cause explainability for elevated risk or anomalous states.
+8. `TREND`: Longitudinal kinematic and activity trend direction, slope, and momentum.
+9. `FORECAST`: Phase 6 probabilistic forecasting across multiple simulation horizons.
+10. `SOURCE_SUPPORT`: Multi-sensor corroboration, reporting agreement, and source reliability scoring.
+11. `CONFLICT`: Cross-sensor contradiction detection, telemetry discrepancies, and spatial mismatches.
+12. `EVIDENCE`: Underlying raw observations, fused consensus tracks, and full epistemic audit trail.
+13. `COMPARISON`: Side-by-side comparative operational analysis between two tracks.
+14. `RELATIONSHIP`: Network topology, co-location clusters, and multi-entity associations.
+15. `SCENARIO`: Execution and evaluation of synthetic operational exercise scenarios.
+16. `HELP`: System capabilities, query syntax, and operational operator guidance.
 
 ---
 
-## 5. Phase 6 API Reference
+## 5. Strict 5-Tier Epistemic Ledger
 
-Mounted under `/api/v1/intelligence`:
+Every fact and conclusion returned by Ask NETRA is categorized into one of 5 strict epistemic tiers:
+* **`OBSERVED`**: Direct raw sensor telemetry or event reports (`EVT-...`).
+* **`FUSED`**: Cross-sensor corroborated consensus observations from Phase 5 (`FUS-...`).
+* **`INFERRED`**: Derived analytical metrics such as anomaly scores (`ANM-...`) and composite risk (`RSK-...`).
+* **`PREDICTED`**: Probabilistic forecasts and horizon states from Phase 6 (`PRD-...`).
+* **`UNCERTAIN`**: Identified information gaps, contradictory telemetry, or cold-start limitations (`UNC-...`).
+
+> [!IMPORTANT]
+> **Zero Hallucination Guarantee**:
+> Ask NETRA will never guess or invent data. Every proposition in `claims` must cite one or more structured evidence IDs from the ledger. When data is missing, conflicting, or cold-started, it is explicitly cataloged under `UNCERTAIN`.
+
+---
+
+## 6. Phase 7 REST API Reference
+
+Mounted under `/api/v1/intelligence/ask`:
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/v1/intelligence/predictions/analyze` | **Master Phase 6 Endpoint**: Multi-strategy future-state projection & 5-tier epistemic ledger |
-| `GET` | `/api/v1/intelligence/entities/{entity_id}/predictions` | Chronological history of generated predictions for an entity |
-| `GET` | `/api/v1/intelligence/entities/{entity_id}/forecast` | Synchronized multi-target dashboard forecast across all 6 analytical dimensions |
-| `GET` | `/api/v1/intelligence/predictions/history` | Global prediction logs with optional `entity_id` filtering |
-| `GET` | `/api/v1/intelligence/predictions/evaluation` | Aggregate synthetic forecasting accuracy (MAE and directional accuracy) |
-| `GET` | `/api/v1/intelligence/predictions/scenarios` | Catalog of 16 predefined predictive operational test scenarios |
-| `POST` | `/api/v1/intelligence/predictions/scenarios/{id}/analyze` | Execute any predefined Phase 6 scenario directly |
+| `POST` | `/api/v1/intelligence/ask` | **Primary Ask NETRA Query Endpoint**: Translates question, executes plan, returns grounded answer |
+| `POST` | `/api/v1/intelligence/ask/parse` | Parse natural language query and return execution plan without running engines |
+| `GET` | `/api/v1/intelligence/ask/capabilities` | Retrieve catalog of all 16 supported intents, epistemic tiers, and capabilities |
+| `GET` | `/api/v1/intelligence/ask/examples` | Retrieve categorized example operational queries |
+| `GET` | `/api/v1/intelligence/ask/scenarios` | List all 20 predefined operational test scenarios |
+| `POST` | `/api/v1/intelligence/ask/scenarios/{id}` | Execute any predefined scenario directly by identifier |
 
 ---
 
-## 6. 16 Predefined Phase 6 Scenarios
+## 7. Verification & Determinism Results
 
-1. **`scenario_1_stable_entity`**: Consistent nominal activity; projects `STABLE` state with high model agreement.
-2. **`scenario_2_escalating_activity`**: Monotonically rising activity; projects `INCREASING` state with positive slope.
-3. **`scenario_3_decaying_risk`**: Tactical resolution with falling threat score; projects `FALLING` risk trend.
-4. **`scenario_4_cyclical_patrol`**: Periodic waypoint check recurrence; projects `RECURRING` event recurrence state.
-5. **`scenario_5_regime_shift`**: Abrupt behavioral surge breaking baseline ($\Delta\text{slope} \ge 0.20$); projects `REGIME_CHANGE`.
-6. **`scenario_6_cold_start_entity`**: Newly detected entity ($< 3$ events); safely projects `UNKNOWN` with confidence $\le 0.30$.
-7. **`scenario_7_limited_history`**: 4 observations recorded; confidence capped at $\le 0.55$.
-8. **`scenario_8_high_sensor_conflict`**: Contradictory sensor inputs widen uncertainty intervals and dampen confidence.
-9. **`scenario_9_unanimous_ensemble`**: 100% agreement across candidate strategies (`Persistence`, `Trend`, `Recurrence`).
-10. **`scenario_10_divergent_ensemble`**: High metric oscillation triggers `VOLATILE` projection and penalizes agreement.
-11. **`scenario_11_sensor_dropout`**: 8-hour telemetry dropout before evaluation increases temporal uncertainty.
-12. **`scenario_12_burst_activity`**: Rapid pulse of 8 events in 2 minutes evaluated for instantaneous rate surge.
-13. **`scenario_13_spatial_loitering`**: Low-speed circular trajectory classified as `LOITERING`.
-14. **`scenario_14_directed_incursion`**: Sustained high-speed vector transit classified as `DIRECTED_TRANSIT`.
-15. **`scenario_15_spurious_anomaly`**: Isolated single-point spike rejected by trend engine; avoids false-alarm escalation.
-16. **`scenario_16_mixed_quality_forecast`**: Heterogeneous sensors produce calibrated confidence and empirical bounds.
-
----
-
-## 7. Verification & Strict Determinism Guarantee
-
-Run the complete test suite across all 6 phases:
+Run the complete regression suite across all 7 phases:
 
 ```powershell
 $env:PYTHONPATH="ai-core"
 py -3.12 -m pytest ai-core/tests -q
 ```
 
-**Results**: `248 passed, 5 warnings in 17.53s` (100% pass rate).
+**Results**: `309 passed, 5 warnings in 32.69s` (100% pass rate).
 
 ### Strict 50-Run Bit-for-Bit Determinism Guarantee
-The automated test `test_strict_50_run_determinism` in `test_prediction_api.py` executes 50 consecutive runs against `POST /api/v1/intelligence/predictions/analyze` under a fixed reference timestamp (`as_of`) and asserts bit-for-bit identical SHA-256 hashes across all 50 iterations:
-* Trend metrics (slope, strength, persistence, volatility, regime shift) are bit-for-bit identical.
-* Candidate model forecasts and model agreement ratios are bit-for-bit identical.
-* Feature engineering items and normalized values are bit-for-bit identical.
-* Estimated probabilities, confidence scores, and uncertainty intervals are bit-for-bit identical.
-* 5-tier epistemic ledger statements (`OBSERVED`, `FUSED`, `INFERRED`, `PREDICTED`, `UNCERTAIN`) are bit-for-bit identical.
-* Generated prediction identifiers and provenance metadata are bit-for-bit identical.
-**Outcome: 50/50 Bit-for-Bit Identical.**
+The automated test `test_strict_50_run_determinism` in `test_ask_determinism.py` executes 50 consecutive runs against `POST /api/v1/intelligence/ask` under a fixed reference timestamp (`as_of`) and asserts bit-for-bit identical SHA-256 hashes across all 50 iterations:
+* Parsed query representation and classification confidence are bit-for-bit identical.
+* Execution plan steps and parameters are bit-for-bit identical.
+* 5-tier epistemic ledger indexing and evidence references are bit-for-bit identical.
+* Synthesized headline, key findings, and grounded claims are bit-for-bit identical.
+* **Outcome: 50/50 Bit-for-Bit Identical.**

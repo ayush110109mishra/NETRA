@@ -17,7 +17,15 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from config import default_config
 from models.error import APIError, APIErrorResponse
-from api.routes import health_router, intelligence_router, anomaly_router, fusion_router, prediction_router
+from api.routes import (
+    health_router,
+    intelligence_router,
+    anomaly_router,
+    fusion_router,
+    prediction_router,
+    ask_router,
+)
+
 
 
 
@@ -142,6 +150,8 @@ app.include_router(intelligence_router)
 app.include_router(anomaly_router)
 app.include_router(fusion_router)
 app.include_router(prediction_router)
+app.include_router(ask_router)
+
 
 
 

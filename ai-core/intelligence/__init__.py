@@ -8,6 +8,7 @@ from .severity import evaluate_severity
 from .confidence import calculate_confidence
 from .assessment import generate_intelligence_assessment
 from .predictive_intelligence import PredictiveIntelligenceEngine
+from .ask_netra import AskNetraEngine
 
 __all__ = [
     "analyze_intelligence",
@@ -16,5 +17,6 @@ __all__ = [
     "calculate_confidence",
     "generate_intelligence_assessment",
     "PredictiveIntelligenceEngine",
+    "AskNetraEngine",
 ]
 

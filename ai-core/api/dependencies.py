@@ -10,6 +10,7 @@ from intelligence.entity_intelligence import EntityIntelligenceEngine
 from intelligence.anomaly_intelligence import AnomalyIntelligenceEngine
 from intelligence.fusion_intelligence import FusionIntelligenceEngine
 from intelligence.predictive_intelligence import PredictiveIntelligenceEngine
+from intelligence.ask_netra import AskNetraEngine
 from simulation.synthetic_data import seed_entity_repository
 
 
@@ -64,5 +65,25 @@ def get_prediction_engine(
         anomaly_engine=anomaly_engine,
         fusion_engine=fusion_engine,
     )
+
+
+def get_ask_engine(
+    config: NetraConfig = Depends(get_config),
+    repo: EntityRepository = Depends(get_entity_repository),
+    entity_engine: EntityIntelligenceEngine = Depends(get_entity_engine),
+    anomaly_engine: AnomalyIntelligenceEngine = Depends(get_anomaly_engine),
+    fusion_engine: FusionIntelligenceEngine = Depends(get_fusion_engine),
+    prediction_engine: PredictiveIntelligenceEngine = Depends(get_prediction_engine),
+) -> AskNetraEngine:
+    """Provide Master AskNetraEngine instance."""
+    return AskNetraEngine(
+        config=config,
+        repository=repo,
+        entity_engine=entity_engine,
+        anomaly_engine=anomaly_engine,
+        fusion_engine=fusion_engine,
+        prediction_engine=prediction_engine,
+    )
+
 
 

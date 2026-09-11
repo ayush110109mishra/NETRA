@@ -385,11 +385,23 @@ class PredictionHysteresisConfig:
     buffer: float = 0.03
 
 
+# --- Phase 7: Ask NETRA Configurations ---
+
+@dataclass(frozen=True)
+class AskNetraConfig:
+    """Configuration for Ask NETRA natural language intelligence interface."""
+    max_context_turns: int = 10
+    intent_confidence_threshold: float = 0.60
+    default_time_window_hours: float = 24.0
+    max_evidence_citations: int = 20
+    enable_conversational_memory: bool = True
+
+
 @dataclass
 class NetraConfig:
     """Master configuration container for NETRA Intelligence Core."""
     app_name: str = "NETRA Intelligence Core"
-    version: str = "6.0.0"
+    version: str = "7.0.0"
     mode: str = "SIMULATION"
     data_classification: str = "SYNTHETIC"
     
@@ -434,6 +446,9 @@ class NetraConfig:
     prediction_horizons: PredictionHorizonConfig = field(default_factory=PredictionHorizonConfig)
     prediction_gating: PredictionGatingConfig = field(default_factory=PredictionGatingConfig)
     prediction_hysteresis: PredictionHysteresisConfig = field(default_factory=PredictionHysteresisConfig)
+
+    # Phase 7 components
+    ask_netra: AskNetraConfig = field(default_factory=AskNetraConfig)
 
     def __post_init__(self):
         self.risk_weights.validate()

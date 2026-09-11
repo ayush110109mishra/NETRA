@@ -29,17 +29,19 @@ NETRA is engineered as a high-density, mission-critical command-and-control plat
 
 ```
 NETRA/
-├── ai-core/                    # Python Intelligence Core (FastAPI, AI/ML, Phases 1-6) [ATUL]
+├── ai-core/                    # Python Intelligence Core (FastAPI, AI/ML, Phases 1-7) [ATUL]
 │   ├── anomaly/                # Phase 4: Multi-dimensional anomaly detection & attribution
-│   ├── api/                    # FastAPI endpoints (/health, /intelligence, /anomalies, /fusion, /predictions)
+│   ├── api/                    # FastAPI endpoints (/health, /intelligence, /anomalies, /fusion, /predictions, /ask)
 │   ├── entities/               # Phase 3: Entity profiles, behavioral baselines & focus mode
 │   ├── events/                 # Phase 2: Multi-event correlation, clustering & deduplication
 │   ├── fusion/                 # Phase 5: Multi-source sensor fusion, conflict arbitration & evidence
-│   ├── intelligence/           # Master domain orchestrators (Phases 1-6)
+│   ├── intelligence/           # Master domain orchestrators (Phases 1-7, AskNetraEngine)
 │   ├── models/                 # Deterministic Pydantic v2 data contracts
 │   ├── prediction/             # Phase 6: Predictive intelligence, trend regression & forecasting
-│   ├── simulation/             # 40+ operational synthetic scenarios
-│   └── tests/                  # 248 automated unit & integration tests (100% pass rate)
+│   ├── query/                  # Phase 7: Natural language intent classification, DAG planner & executor
+│   ├── reasoning/              # Phase 7: 5-tier Epistemic Ledger, attribution & structured synthesis
+│   ├── simulation/             # 60+ operational synthetic scenarios
+│   └── tests/                  # 309 automated unit & integration tests (100% pass rate)
 ├── apps/
 │   ├── web/                    # React 18, Vite, TypeScript, Tailwind CSS, TanStack Query [AYUSH]
 │   └── api/                    # Express.js, TypeScript, Zod, Structured Logger, Correlation ID [AYUSH]
@@ -76,7 +78,7 @@ python main.py
 ```
 - **Intelligence API Root**: [http://localhost:8000](http://localhost:8000)
 - **Interactive OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Verification Suite (248 Tests)**:
+- **Verification Suite (309 Tests)**:
   ```bash
   pytest tests/
   ```
@@ -97,7 +99,7 @@ npm run dev
 ## Quality & Verification
 
 ```bash
-# Verify Python Intelligence Core (248/248 tests passed, 50/50 bit-for-bit determinism)
+# Verify Python Intelligence Core (309/309 tests passed, 50/50 bit-for-bit determinism)
 cd ai-core && pytest tests/ -q && cd ..
 
 # Run strict TypeScript type checks across all Node workspaces

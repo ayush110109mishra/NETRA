@@ -1414,6 +1414,19 @@ def seed_entity_repository(repo: Any) -> None:
     for item in PHASE4_SCENARIOS_MAP.values():
         for event in item["events"]:
             repo.add_event(event)
+    # Seed canonical short IDs for Ask NETRA queries (ENTITY-01, ENTITY-02, ENTITY-03)
+    if "ENTITY-01" not in repo._entity_events:
+        for ev in SCENARIO_EVENTS_STABLE:
+            copied = ev.model_copy(update={"event_id": ev.event_id.replace("STABLE", "01"), "entity_ids": ["ENTITY-01"]})
+            repo.add_event(copied)
+    if "ENTITY-02" not in repo._entity_events:
+        for ev in SCENARIO_EVENTS_COLD_START:
+            copied = ev.model_copy(update={"event_id": ev.event_id.replace("COLD", "02"), "entity_ids": ["ENTITY-02"]})
+            repo.add_event(copied)
+    if "ENTITY-03" not in repo._entity_events:
+        for ev in SCENARIO_EVENTS_ACTIVITY_SURGE:
+            copied = ev.model_copy(update={"event_id": ev.event_id.replace("SURGE", "03"), "entity_ids": ["ENTITY-03"]})
+            repo.add_event(copied)
 
 
 def get_all_entity_scenarios() -> Dict[str, Dict[str, Any]]:
@@ -1462,6 +1475,13 @@ from simulation.prediction_scenarios import (
     get_all_prediction_scenarios,
     get_prediction_scenario,
 )
+
+# --- Phase 7 Ask NETRA Scenarios ---
+from simulation.ask_scenarios import (
+    get_ask_scenarios,
+    get_ask_scenario_by_id,
+)
+
 
 
 
