@@ -29,6 +29,7 @@ class QueryExecutor:
         anomaly_engine: Optional[AnomalyIntelligenceEngine] = None,
         fusion_engine: Optional[FusionIntelligenceEngine] = None,
         prediction_engine: Optional[PredictiveIntelligenceEngine] = None,
+        graph_engine: Optional[Any] = None,
     ):
         self.config = config or default_config
         self.repository = repository or EntityRepository(self.config.entity)
@@ -38,6 +39,7 @@ class QueryExecutor:
         self.prediction_engine = prediction_engine or PredictiveIntelligenceEngine(
             self.config, self.repository, self.anomaly_engine, self.fusion_engine
         )
+        self.graph_engine = graph_engine
 
     def execute_plan(
         self,
@@ -65,6 +67,8 @@ class QueryExecutor:
             "forecast_response": None,
             "fusion_analysis": None,
             "active_entities": [],
+            "graph_network": None,
+            "graph_path": None,
         }
 
         ref_time = as_of or parsed.parsed_at
@@ -106,6 +110,16 @@ class QueryExecutor:
                             output = {"clusters": resp.cluster_memberships, "relationships": resp.relationships}
                         except Exception:
                             output = {"clusters": [], "relationships": []}
+
+                        if self.graph_engine:
+                            try:
+                                if parsed.secondary_entity_id:
+                                    p_res = self.graph_engine.shortest_path(entity_id, parsed.secondary_entity_id, as_of=ref_time)
+                                    execution_context["graph_path"] = p_res
+                                g_net = self.graph_engine.entity_network(entity_id, depth=1, as_of=ref_time)
+                                execution_context["graph_network"] = g_net
+                            except Exception:
+                                pass
 
                 elif engine_name == "event_engine":
                     if action in ("fetch_recent_events", "get_entity_timeline"):

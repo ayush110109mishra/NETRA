@@ -114,7 +114,7 @@ INTENT_PATTERNS: List[Tuple[QueryIntent, List[re.Pattern], float]] = [
     (
         QueryIntent.RELATIONSHIP,
         [
-            re.compile(r"\b(relationship\w*|connection\w*|network\w*|associated with|linked to|co-located|allies|cluster\w*)\b", re.I),
+            re.compile(r"\b(relationship\w*|connect\w*|network\w*|associated with|linked to|co-located|allies|cluster\w*)\b", re.I),
             re.compile(r"\bwho is \S+ operating with\b", re.I),
         ],
         0.90,

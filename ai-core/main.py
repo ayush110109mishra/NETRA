@@ -24,6 +24,7 @@ from api.routes import (
     fusion_router,
     prediction_router,
     ask_router,
+    graph_router,
 )
 
 
@@ -151,6 +152,8 @@ app.include_router(anomaly_router)
 app.include_router(fusion_router)
 app.include_router(prediction_router)
 app.include_router(ask_router)
+app.include_router(graph_router)
+
 
 
 

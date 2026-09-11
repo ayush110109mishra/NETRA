@@ -397,11 +397,81 @@ class AskNetraConfig:
     enable_conversational_memory: bool = True
 
 
+# --- Phase 8: Knowledge Graph & Relationship Intelligence Configurations ---
+
+@dataclass(frozen=True)
+class RelationshipWeights:
+    """Explicit weights for multi-factor relationship scoring. Must sum to 1.0."""
+    correlation_strength: float = 0.25
+    persistence: float = 0.20
+    repetition: float = 0.15
+    source_independence: float = 0.15
+    evidence_quality: float = 0.15
+    recency: float = 0.10
+
+    def validate(self) -> None:
+        total = (
+            self.correlation_strength
+            + self.persistence
+            + self.repetition
+            + self.source_independence
+            + self.evidence_quality
+            + self.recency
+        )
+        if abs(total - 1.0) > 1e-6:
+            raise ValueError(f"Relationship weights must sum to 1.0, got {total}")
+
+
+@dataclass(frozen=True)
+class RelationshipConfig:
+    """Thresholds and operational parameters for relationship scoring and lifecycle."""
+    weights: RelationshipWeights = field(default_factory=RelationshipWeights)
+    contradiction_penalty_factor: float = 0.30   # Max penalty subtracted when contradictions exist
+    active_threshold: float = 0.40              # Minimum score to be ACTIVE
+    persistent_min_windows: int = 3             # Min time windows for PERSISTENT
+    persistent_min_duration_seconds: float = 3600.0 # Min duration for PERSISTENT
+    stale_threshold_seconds: float = 86400.0    # 24h of inactivity -> STALE
+    weakening_delta_threshold: float = 0.15     # Score drop indicating WEAKENING
+    strengthening_delta_threshold: float = 0.15 # Score rise indicating STRENGTHENING
+
+
+@dataclass(frozen=True)
+class GraphConfig:
+    """Graph traversal, capacity and safety limits."""
+    default_depth: int = 1
+    max_depth: int = 3
+    max_nodes: int = 500
+    max_edges: int = 1000
+    max_paths: int = 10
+    max_communities: int = 50
+
+
+@dataclass(frozen=True)
+class PathConfig:
+    """Path analysis and deterministic search configuration."""
+    max_search_depth: int = 4
+    min_edge_confidence: float = 0.10
+
+
+@dataclass(frozen=True)
+class CommunityConfig:
+    """Deterministic community analysis thresholds."""
+    min_community_size: int = 2
+    resolution: float = 1.0
+
+
+@dataclass(frozen=True)
+class TemporalGraphConfig:
+    """Temporal graph validity configuration."""
+    default_validity_duration_seconds: float = 86400.0  # 24 hours default validity
+    snapshot_cache_size: int = 100
+
+
 @dataclass
 class NetraConfig:
     """Master configuration container for NETRA Intelligence Core."""
     app_name: str = "NETRA Intelligence Core"
-    version: str = "7.0.0"
+    version: str = "8.0.0"
     mode: str = "SIMULATION"
     data_classification: str = "SYNTHETIC"
     
@@ -450,6 +520,13 @@ class NetraConfig:
     # Phase 7 components
     ask_netra: AskNetraConfig = field(default_factory=AskNetraConfig)
 
+    # Phase 8 components
+    graph: GraphConfig = field(default_factory=GraphConfig)
+    relationship_intelligence: RelationshipConfig = field(default_factory=RelationshipConfig)
+    path_config: PathConfig = field(default_factory=PathConfig)
+    community_config: CommunityConfig = field(default_factory=CommunityConfig)
+    temporal_graph: TemporalGraphConfig = field(default_factory=TemporalGraphConfig)
+
     def __post_init__(self):
         self.risk_weights.validate()
         self.confidence_weights.validate()
@@ -461,9 +538,11 @@ class NetraConfig:
         self.source_reliability_weights.validate()
         self.fusion_weights.validate()
         self.prediction_weights.validate()
+        self.relationship_intelligence.weights.validate()
 
 
 # Global default configuration instance
 default_config = NetraConfig()
+
 
 

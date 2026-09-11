@@ -293,20 +293,79 @@ class AnswerSynthesizer:
             summary = f"Comparative evaluation between {context.get('entity_id')} and {context.get('secondary_entity_id')}."
 
         elif intent == QueryIntent.RELATIONSHIP:
-            headline = f"Relational Graph & Network Topology for {entity_id}"
-            summary = f"Spatial co-location and behavioral association analysis for {entity_id}."
-            key_findings = [
-                f"Entity {entity_id} analyzed for spatial proximity and co-occurrence clusters.",
-                "Network associations mapped from shared event clusters and temporal alignment.",
-            ]
-            claims.append(
-                ClaimItem(
-                    statement=f"Relational topology for {entity_id} derived from multi-event spatial correlation.",
-                    epistemic_tier=EpistemicTier.INFERRED,
-                    supporting_evidence_ids=[e.evidence_id for e in ledger.inferred] or ["RELATIONAL-GRAPH"],
-                    confidence=0.86,
+            graph_path = context.get("graph_path")
+            graph_network = context.get("graph_network")
+
+            if graph_path:
+                if graph_path.path_found:
+                    headline = f"Evidence Connection Path: {entity_id} <-> {graph_path.target}"
+                    summary = graph_path.explanation
+                    key_findings = [
+                        f"Traversable path discovered spanning {graph_path.hop_count} hop(s).",
+                        f"Bottleneck path confidence: {graph_path.path_confidence:.2f}",
+                    ]
+                    if graph_path.weakest_link:
+                        key_findings.append(f"Weakest link along path: {graph_path.weakest_link}")
+                    claims.append(
+                        ClaimItem(
+                            statement=f"Evidence path of {graph_path.hop_count} hops connects {entity_id} and {graph_path.target}.",
+                            epistemic_tier=EpistemicTier.INFERRED,
+                            supporting_evidence_ids=graph_path.supporting_evidence or ["GRAPH-PATH"],
+                            confidence=graph_path.path_confidence,
+                        )
+                    )
+                else:
+                    headline = f"Connection Query: {entity_id} and {graph_path.target}"
+                    summary = f"No evidence-supported path was found between {entity_id} and {graph_path.target} within the requested graph scope."
+                    key_findings = [
+                        f"No evidence-supported path connects {entity_id} and {graph_path.target}.",
+                        "Entities are topologically disconnected in the active knowledge graph.",
+                    ]
+                    claims.append(
+                        ClaimItem(
+                            statement=f"No evidence-supported path was found between {entity_id} and {graph_path.target}.",
+                            epistemic_tier=EpistemicTier.UNCERTAIN,
+                            supporting_evidence_ids=[],
+                            confidence=0.95,
+                        )
+                    )
+            elif graph_network and graph_network.get("relationships"):
+                rels = graph_network.get("relationships", [])
+                neighbors = graph_network.get("neighbors", [])
+                neighbor_entities = [n.label for n in neighbors if n.label != entity_id]
+                headline = f"Knowledge Graph & Network Topology for {entity_id}"
+                summary = f"Entity {entity_id} is associated with {len(neighbor_entities)} entity/entities across {len(rels)} relationship(s)."
+                key_findings = [
+                    f"Connected entities: {', '.join(neighbor_entities) if neighbor_entities else 'None direct'}",
+                    f"Active relationship count: {len(rels)}",
+                ]
+                all_ev = []
+                for r in rels:
+                    all_ev.extend(r.supporting_evidence)
+                    key_findings.append(f"{r.source_entity_id} <-> {r.target_entity_id}: strength {r.strength:.2f} ({r.status.value})")
+                claims.append(
+                    ClaimItem(
+                        statement=f"Knowledge graph maps {len(rels)} relationship(s) connecting {entity_id}.",
+                        epistemic_tier=EpistemicTier.INFERRED,
+                        supporting_evidence_ids=sorted(list(set(all_ev))) or ["RELATIONAL-GRAPH"],
+                        confidence=0.88,
+                    )
                 )
-            )
+            else:
+                headline = f"Relational Graph & Network Topology for {entity_id}"
+                summary = f"Spatial co-location and behavioral association analysis for {entity_id}."
+                key_findings = [
+                    f"Entity {entity_id} analyzed for spatial proximity and co-occurrence clusters.",
+                    "Network associations mapped from shared event clusters and temporal alignment.",
+                ]
+                claims.append(
+                    ClaimItem(
+                        statement=f"Relational topology for {entity_id} derived from multi-event spatial correlation.",
+                        epistemic_tier=EpistemicTier.INFERRED,
+                        supporting_evidence_ids=[e.evidence_id for e in ledger.inferred] or ["RELATIONAL-GRAPH"],
+                        confidence=0.86,
+                    )
+                )
 
         elif intent == QueryIntent.SCENARIO:
             headline = f"Operational Simulation Scenario Execution"

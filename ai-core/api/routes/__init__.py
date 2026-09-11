@@ -8,8 +8,18 @@ from .anomaly import router as anomaly_router
 from .fusion import router as fusion_router
 from .prediction import router as prediction_router
 from .ask import router as ask_router
+from .graph import router as graph_router
 
-__all__ = ["health_router", "intelligence_router", "anomaly_router", "fusion_router", "prediction_router", "ask_router"]
+__all__ = [
+    "health_router",
+    "intelligence_router",
+    "anomaly_router",
+    "fusion_router",
+    "prediction_router",
+    "ask_router",
+    "graph_router",
+]
+
 
 
 

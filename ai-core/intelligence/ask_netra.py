@@ -83,6 +83,7 @@ class AskNetraEngine:
         anomaly_engine: Optional[AnomalyIntelligenceEngine] = None,
         fusion_engine: Optional[FusionIntelligenceEngine] = None,
         prediction_engine: Optional[PredictiveIntelligenceEngine] = None,
+        graph_engine: Optional[Any] = None,
     ):
         self.config = config or default_config
         self.repository = repository or EntityRepository(self.config.entity)
@@ -92,6 +93,8 @@ class AskNetraEngine:
         self.prediction_engine = prediction_engine or PredictiveIntelligenceEngine(
             self.config, self.repository, self.anomaly_engine, self.fusion_engine
         )
+        from graph.graph_engine import KnowledgeGraphEngine
+        self.graph_engine = graph_engine or KnowledgeGraphEngine(self.config)
 
         known_ids = set(self.repository._entities.keys()) | set(self.repository._entity_events.keys())
         self.query_interpreter = QueryInterpretationEngine(
@@ -105,6 +108,7 @@ class AskNetraEngine:
             anomaly_engine=self.anomaly_engine,
             fusion_engine=self.fusion_engine,
             prediction_engine=self.prediction_engine,
+            graph_engine=self.graph_engine,
         )
         self.reasoning_engine = ReasoningEngine()
         self.sessions: Dict[str, SessionState] = {}
@@ -134,6 +138,8 @@ class AskNetraEngine:
 
         # Synchronize known entities
         all_ids = set(self.repository._entities.keys()) | set(self.repository._entity_events.keys())
+        if self.graph_engine:
+            all_ids |= {n.label for n in self.graph_engine.node_registry.get_all_nodes()}
         self.query_interpreter.update_known_entities(all_ids)
 
         # Session context

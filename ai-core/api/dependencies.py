@@ -11,6 +11,8 @@ from intelligence.anomaly_intelligence import AnomalyIntelligenceEngine
 from intelligence.fusion_intelligence import FusionIntelligenceEngine
 from intelligence.predictive_intelligence import PredictiveIntelligenceEngine
 from intelligence.ask_netra import AskNetraEngine
+from intelligence.graph_intelligence import GraphIntelligenceEngine
+from graph.graph_engine import KnowledgeGraphEngine
 from simulation.synthetic_data import seed_entity_repository
 
 
@@ -84,6 +86,26 @@ def get_ask_engine(
         fusion_engine=fusion_engine,
         prediction_engine=prediction_engine,
     )
+
+
+@lru_cache()
+def get_knowledge_graph_engine() -> KnowledgeGraphEngine:
+    """Singleton KnowledgeGraphEngine instance."""
+    return KnowledgeGraphEngine(config=default_config)
+
+
+def get_graph_intelligence_engine(
+    config: NetraConfig = Depends(get_config),
+    repo: EntityRepository = Depends(get_entity_repository),
+    graph_engine: KnowledgeGraphEngine = Depends(get_knowledge_graph_engine),
+) -> GraphIntelligenceEngine:
+    """Provide Master GraphIntelligenceEngine instance."""
+    return GraphIntelligenceEngine(
+        config=config,
+        repository=repo,
+        graph_engine=graph_engine,
+    )
+
 
 
 
