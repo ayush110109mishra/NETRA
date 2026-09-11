@@ -25,7 +25,15 @@ export const CommandHeader: React.FC = () => {
     <header className="border-b border-slate-800 bg-tactical-header px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 select-none">
       {/* Brand & Platform Identity */}
       <div className="flex items-center gap-3">
-        {/* Official NETRA Eye Emblem */}
+        {/* Official ASTRAVEDA Corporate Emblem */}
+        <div className="relative flex items-center justify-center h-9 w-9 rounded-sm border border-cyan-500/30 bg-black/90 overflow-hidden shrink-0 shadow-sm">
+          <img
+            src="/assets/astraveda-logo.jpg"
+            alt="ASTRAVEDA"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        {/* Official NETRA Reticle Eye Emblem */}
         <div className="relative flex items-center justify-center h-9 w-9 rounded-sm border border-cyan-500/40 bg-black/90 overflow-hidden shadow-tactical-glow shrink-0">
           <img
             src="/assets/netra-logo.png"
