@@ -1,0 +1,26 @@
+{
+  "name": "netra-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NETRA - AI-Powered Defence Intelligence & Situational Awareness Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"API,WEB\" -c \"blue,cyan\" \"npm run dev --workspace=@netra/api\" \"npm run dev --workspace=@netra/web\"",
+    "dev:api": "npm run dev --workspace=@netra/api",
+    "dev:web": "npm run dev --workspace=@netra/web",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prisma": "^6.4.1",
+    "typescript": "^5.8.2"
+  }
+}
